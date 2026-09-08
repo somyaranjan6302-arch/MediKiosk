@@ -3,15 +3,6 @@
 ### AI-Powered Patient Case-Taking & Medical History System
 **SIH Problem Statement ID:** SIH26047 | **Theme:** MedTech / BioTech / HealthTech | **Category:** Software | **Team:** Power Rangers
 
----
-
-## HOW TO USE THIS DOCUMENT
-
-This is a complete build specification. If you paste this into an AI coding assistant (Claude Code, Cursor, etc.) or hand it to a dev team, it should be able to scaffold the entire system end-to-end without needing to ask "what do you mean by X" for any core feature. Every module from the original SIH submission is expanded here with concrete requirements, data models, API contracts, and acceptance criteria. Nothing from the original slides has been left out — OCR, ASR/TTS, conversational AI, red-flag detection, AYUSH mode, FHIR/ABHA integration, consent/audit, and infra are all specified in full.
-
-Work through the phases in order (Section 12). Do not skip the consent/audit layer or the human-verification gates on OCR and AI outputs — these are compliance-critical, not optional polish.
-
----
 
 ## 1. PROJECT OVERVIEW
 
