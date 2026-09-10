@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  # 1. Primary Relational Store
+  postgres:
+    image: postgres:16-alpine
+    container_name: medikiosk_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-medikiosk}
+      POSTGRES_USER: ${POSTGRES_USER:-medikiosk_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-MediKioskSecure2026!}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-medikiosk_admin} -d ${POSTGRES_DB:-medikiosk}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Redis Cache & Real-time Pub/Sub for Triage Alerts
+  redis:
+    image: redis:7-alpine
+    container_name: medikiosk_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-RedisSecure2026!}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-RedisSecure2026!}", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. MinIO S3-compatible Object Storage for Scanned Prescriptions & Reports
+  minio:
+    image: minio/minio:RELEASE.2024-05-10T01-41-38Z
+    container_name: medikiosk_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-MinioSecure2026!}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 4. Keycloak IAM (OAuth2 / OIDC for Staff Authentication)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: medikiosk_keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-KeycloakAdmin2026!}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-medikiosk}
+      KC_DB_USERNAME: ${POSTGRES_USER:-medikiosk_admin}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-MediKioskSecure2026!}
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # 5. MediKiosk FastAPI Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: medikiosk_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-medikiosk_admin}:${POSTGRES_PASSWORD:-MediKioskSecure2026!}@postgres:5432/${POSTGRES_DB:-medikiosk}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-RedisSecure2026!}@redis:6379/0
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-MinioSecure2026!}
+      MINIO_BUCKET_NAME: medikiosk-docs
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: medikiosk
+      CORS_ORIGINS: "*"
+      SECRET_KEY: ${BACKEND_SECRET_KEY:-MediKiosk_SecretKey_Production_2026_ReplaceInProd}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/api/health\")'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 6. MediKiosk React + TypeScript PWA Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: medikiosk_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:

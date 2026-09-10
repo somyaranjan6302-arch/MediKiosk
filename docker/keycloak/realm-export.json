@@ -1,0 +1,119 @@
+{
+  "id": "medikiosk",
+  "realm": "medikiosk",
+  "displayName": "MediKiosk Healthcare Realm",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "roles": {
+    "realm": [
+      {
+        "name": "patient_kiosk",
+        "description": "Kiosk terminal patient interaction role"
+      },
+      {
+        "name": "nurse",
+        "description": "Hospital triage and assisted-mode nurse"
+      },
+      {
+        "name": "doctor",
+        "description": "Physician clinical review and confirmation role"
+      },
+      {
+        "name": "admin",
+        "description": "System and infrastructure administrator"
+      },
+      {
+        "name": "compliance_officer",
+        "description": "DPDP 2023 audit officer"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "medikiosk-app",
+      "name": "MediKiosk Frontend and API Client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:8000/*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "dr_arun",
+      "enabled": true,
+      "email": "dr.arun@hospital.gov.in",
+      "firstName": "Arun",
+      "lastName": "Verma (MD)",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "DoctorPass2026!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "doctor"
+      ]
+    },
+    {
+      "username": "nurse_sunita",
+      "enabled": true,
+      "email": "sunita.k@hospital.gov.in",
+      "firstName": "Sunita",
+      "lastName": "Kaur",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "NursePass2026!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "nurse"
+      ]
+    },
+    {
+      "username": "admin_rahul",
+      "enabled": true,
+      "email": "admin@hospital.gov.in",
+      "firstName": "Rahul",
+      "lastName": "Nair",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "AdminPass2026!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admin"
+      ]
+    },
+    {
+      "username": "compliance_priya",
+      "enabled": true,
+      "email": "compliance@hospital.gov.in",
+      "firstName": "Priya",
+      "lastName": "Menon",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "AuditPass2026!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "compliance_officer"
+      ]
+    }
+  ]
+}
