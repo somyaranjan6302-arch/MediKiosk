@@ -51,7 +51,7 @@ export const IdentityStep: React.FC<IdentityStepProps> = ({ language, onVerified
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="kiosk-landing max-w-4xl mx-auto">
       {/* Live Hospital Telemetry Banner */}
       <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-cyan-950/40 border border-slate-800 flex flex-wrap items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ export const IdentityStep: React.FC<IdentityStepProps> = ({ language, onVerified
         </div>
       </div>
 
-      <div className="text-center mb-8">
+      <div className="landing-heading text-center mb-8">
         <h2 className="text-4xl font-display font-extrabold text-white mb-2 tracking-tight">
           {language === 'hi' ? 'स्मार्ट मरीज चेक-इन' : 'Patient Self-Service Check-In'}
         </h2>

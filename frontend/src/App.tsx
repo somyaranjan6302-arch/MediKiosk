@@ -27,7 +27,7 @@ export const App: React.FC = () => {
   }, [fontSize]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-cyan-500 selection:text-white">
+    <div className="app-shell min-h-screen flex flex-col text-slate-100 selection:bg-emerald-400 selection:text-slate-950">
       {/* Universal Header */}
       <Header
         mode={mode}
@@ -42,7 +42,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Mode View */}
-      <main className="flex-1 py-4">
+      <main className="app-main flex-1 py-4">
         {mode === 'kiosk' ? (
           <KioskContainer
             language={language}
@@ -54,7 +54,7 @@ export const App: React.FC = () => {
       </main>
 
       {/* Clinical Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/80 py-4 px-6 text-center text-xs text-slate-500">
+      <footer className="app-footer border-t border-slate-800/80 bg-slate-950/80 py-4 px-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
             MediKiosk • SIH26047 Patient Case-Taking Software • Team Power Rangers

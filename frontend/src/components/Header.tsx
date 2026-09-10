@@ -37,18 +37,18 @@ export const Header: React.FC<HeaderProps> = ({
   isKioskActive
 }) => {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 py-3 sm:px-6">
+    <header className="app-header sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 py-3 sm:px-6">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
         
         {/* Brand Logo & SIH Info */}
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 shadow-lg shadow-cyan-500/25">
+          <div className="brand-mark flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-400 to-teal-600 shadow-lg shadow-emerald-500/25">
             <HeartPulse className="h-6 w-6 text-white animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
-                Medi<span className="text-cyan-400">Kiosk</span>
+                <span className="font-display text-xl font-bold tracking-tight text-white sm:text-2xl">
+                Medi<span className="text-emerald-300">Kiosk</span>
               </span>
               <span className="rounded-full bg-cyan-950/80 border border-cyan-700/50 px-2 py-0.5 text-[10px] font-semibold text-cyan-300">
                 SIH26047
